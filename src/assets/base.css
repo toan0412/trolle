@@ -3,6 +3,8 @@
   --header-menu-color: #172B4D;
   --header-menu-background: #00000033;
   --dynamic-text: #172B4D;
+  --dynamic-background-transparent: #fcfcfce6;
+  --dynamic-text-transparent: #172b4d29;
 }
 
 /* semantic color variables for this project */
