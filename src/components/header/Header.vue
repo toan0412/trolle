@@ -3,12 +3,12 @@
     <div class="header-item">
       <v-icon icon="mdi-table-large" />
       <img src="https://1000logos.net/wp-content/uploads/2021/05/Trello-logo.png"
-        style="width: 80px; height: 45px; padding-left:12px" alt="logo">
+        style="width: 85px; height: 45px; padding-left:12px" alt="logo">
       </img>
-      <DefaultButton>Các không gian làm việc</DefaultButton>
-      <DefaultButton>Gần đây</DefaultButton>
-      <DefaultButton>Đã đánh dấu sao</DefaultButton>
-      <DefaultButton>Mẫu</DefaultButton>
+      <DefaultButton append-icon="mdi-chevron-down">Các không gian làm việc</DefaultButton>
+      <DefaultButton append-icon="mdi-chevron-down">Gần đây</DefaultButton>
+      <DefaultButton append-icon="mdi-chevron-down">Đã đánh dấu sao</DefaultButton>
+      <DefaultButton append-icon="mdi-chevron-down">Mẫu</DefaultButton>
       <DefaultButton buttonColor="gray">Tạo mới</DefaultButton>
 
     </div>

@@ -1,8 +1,10 @@
 <template>
-  <button class="default-button text-none" :disabled="isDisabled"
+  <v-btn class="default-button text-none" :disabled="isDisabled"
     :style="{ backgroundColor: colors[buttonColor], color: colors[textColor] }">
-    <slot></slot>
-  </button>
+    <div class="btn-body">
+      <slot></slot>
+    </div>
+  </v-btn>
 </template>
 
 <script>
@@ -29,6 +31,8 @@ export default {
         white: '#ffffff',
         black: '#3d3f4e',
         gray: "#00000033",
+        brown: '#00000080',
+        cardColor: "#f1f2f4"
       }
     };
   },
@@ -36,20 +40,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.default-button {
-  font-size: 14px;
+.v-btn--density-default {
   padding: 6px 10px 6px 12px;
   margin: 0 4px;
-  height: 32px;
-  font-weight: 500 !important;
+  height: 32px !important;
   border-radius: 4px;
+  box-shadow: none;
+  letter-spacing: unset !important;
+
+  .btn-body {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
 }
 
-.default-button:hover {
+.v-btn--density-default:hover {
   background-color: var(--header-menu-background) !important;
+  box-shadow: none;
 }
 
-.default-button:disabled {
+.v-btn--density-default:disabled {
   background-color: var(--ms-disable-background-button) !important;
   color: var(--ms-disable-text-button) !important;
   cursor: not-allowed;

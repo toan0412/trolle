@@ -5,6 +5,10 @@
   --dynamic-text: #172B4D;
   --dynamic-background-transparent: #fcfcfce6;
   --dynamic-text-transparent: #172b4d29;
+  --dynamic-button-hovered: #091E4224;
+  --tr-background-list: #f1f2f4;
+  --ds-shadow-raised: 0px 1px 1px #091E4240, 0px 0px 1px #091E424F;
+  --ds-text-subtle: #44546F;
 }
 
 /* semantic color variables for this project */
@@ -45,8 +49,8 @@
 }
 
 body {
-  min-height: 100vh;
   color: var(--header-menu-color);
+  min-height: 100vh;
   transition:
     color 0.5s,
     background-color 0.5s;

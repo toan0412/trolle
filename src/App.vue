@@ -21,7 +21,26 @@ import Sidebar from '@/components/sidebar/Sidebar.vue'
 </template>
 
 <style lang="scss">
+.container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
 .header-container {
+  height: 48px;
   padding: 4px;
+}
+
+.main-container {
+  display: flex;
+  height: calc(100vh - 48px)
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 </style>
