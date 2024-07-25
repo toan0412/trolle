@@ -32,7 +32,8 @@ export default {
         black: '#3d3f4e',
         gray: "#00000033",
         brown: '#00000080',
-        cardColor: "#f1f2f4"
+        cardColor: "#f1f2f4",
+        blue: "#0C66E4"
       }
     };
   },

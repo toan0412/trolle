@@ -33,7 +33,7 @@ export default {
   font-size: 14px;
   height: 32px;
   width: 32px;
-  padding: 4;
+  padding: 4px;
   margin: 0 6px;
   border-radius: 4px;
   color: var(--dynamic-text);
