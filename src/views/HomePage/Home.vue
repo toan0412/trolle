@@ -31,7 +31,8 @@
             <p class="list-header-name">{{ column.type }}</p>
             <IconButton
               @click="showColumnDeleteDialog(columnIndex)"
-              icon="mdi-dots-horizontal"
+              icon="mdi-trash-can-outline"
+              class="remove-column-icon"
             ></IconButton>
           </div>
           <!-- card body -->
@@ -49,7 +50,7 @@
                     <a @click="showCardDetail(element, column)">{{ element.header }}</a>
                     <IconButton
                       @click="showCardDeleteDialog(column, element)"
-                      class="remove-icon"
+                      class="remove-card-icon"
                       icon="mdi-close"
                     >
                     </IconButton>
@@ -513,20 +514,28 @@ export default {
   }
 }
 
-.remove-icon {
-  visibility: hidden;
-  border-radius: 50% !important;
-
-  i {
-    font-size: 14px !important;
-  }
-}
-
 .list-group-item {
+  .remove-card-icon {
+    visibility: hidden;
+    border-radius: 50% !important;
+
+    i {
+      font-size: 14px !important;
+    }
+  }
   li:hover {
-    .remove-icon {
+    .remove-card-icon {
       visibility: visible;
     }
+  }
+}
+.remove-column-icon {
+  visibility: hidden;
+}
+
+.board-column:hover {
+  .remove-column-icon {
+    visibility: visible;
   }
 }
 
