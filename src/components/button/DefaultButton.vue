@@ -33,7 +33,8 @@ export default {
         gray: "#00000033",
         brown: '#00000080',
         cardColor: "#f1f2f4",
-        blue: "#0C66E4"
+        blue: "#0C66E4",
+        cardDetailColor: '#091e420f'
       }
     };
   },
@@ -41,6 +42,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-btn--elevated:active {
+  box-shadow: unset;
+}
+
+.v-btn--elevated:focus {
+  box-shadow: unset;
+
+}
+
 .v-btn--density-default {
   padding: 6px 10px 6px 12px;
   margin: 0 4px;
@@ -53,6 +63,7 @@ export default {
     font-size: 14px !important;
     font-weight: 500 !important;
   }
+
 }
 
 .v-btn--density-default:hover {

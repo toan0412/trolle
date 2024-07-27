@@ -11,7 +11,7 @@
       <DefaultButton prepend-icon="mdi-rocket-launch-outline">Tiện ích bổ sung</DefaultButton>
       <DefaultButton prepend-icon="mdi-flash-outline">Tự động hóa</DefaultButton>
       <DefaultButton prepend-icon="mdi-filter-variant">Bộ lọc</DefaultButton>
-      <DefaultButton textColor="white" buttonColor="inherit" prepend-icon="mdi-account-plus-outline">Chia sẻ
+      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-account-plus-outline">Chia sẻ
       </DefaultButton>
       <IconButton icon="mdi-dots-horizontal"></IconButton>
     </div>
@@ -31,7 +31,7 @@
               itemKey="id">
               <template #item="{ element }">
                 <div class="list-group-item">
-                  <li>
+                  <li @click="showCardDetail(element, column)">
                     <a>{{ element.header }}</a>
                     <IconButton @click="handleDeleteCard(column, element)" class="remove-icon" icon="mdi-close">
                     </IconButton>
@@ -89,6 +89,9 @@
       </li>
     </ol>
   </div>
+  <div>
+    <CardDetail :cardDetail="selectedCard" :columnDetail="selectedColumn" ref="cardDetail" />
+  </div>
 </template>
 
 <script>
@@ -96,6 +99,7 @@ import DefaultButton from '@/components/button/DefaultButton.vue';
 import IconButton from '@/components/button/IconButton.vue';
 import draggable from 'vuedraggable';
 import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js';
+import CardDetail from './CardDetail.vue'
 
 export default {
   name: 'HomePage',
@@ -104,6 +108,7 @@ export default {
     IconButton,
     draggable,
     BaseIndexedDB,
+    CardDetail
   },
   data() {
     return {
@@ -112,6 +117,8 @@ export default {
       newCardName: '',
       isNewColumn: false,
       newColumnName: '',
+      selectedCard: null,
+      selectedColumn: null,
     };
   },
   methods: {
@@ -165,7 +172,7 @@ export default {
         ],
       });
 
-      this.loadData();
+      this.loadData()
     },
     async addCard(columnIndex) {
       if (!this.newCardName.trim()) {
@@ -174,28 +181,28 @@ export default {
 
       try {
         const column = this.category[columnIndex];
-        const newCard = { header: this.newCardName, createdAt: Date.now() };
+        const newCard = { header: this.newCardName, createdAt: Date.now() }
 
-        column.list.push(newCard);
+        column.list.push(newCard)
 
         // Cập nhật cột trong IndexedDB
-        this.addDB(column);
+        this.addDB(column)
         this.loadData()
 
         // Xóa dữ liệu trong trường nhập liệu sau khi thêm thẻ
-        this.resetAddForm();
+        this.resetAddForm()
       } catch (error) {
-        console.error('Failed to add card:', error);
+        console.error('Failed to add card:', error)
       }
     },
     //Hàm cập nhật indexedDB khi drag and drop card
     async onDragChange(columnIndex) {
-      const column = this.category[columnIndex];
+      const column = this.category[columnIndex]
 
       try {
         await this.addDB(column);
       } catch (error) {
-        console.error('Failed to update column:', error);
+        console.error('Failed to update column:', error)
       }
     },
     //Hàm xóa card
@@ -223,6 +230,12 @@ export default {
       this.addDB(newColumn)
       this.toggleNewColumn();
       this.newColumnName = ''
+    },
+    //Hiển thị chi tiết thẻ
+    showCardDetail(card, column) {
+      this.selectedCard = card
+      this.selectedColumn = column
+      this.$refs.cardDetail.openDialog()
     }
   },
   mounted() {
