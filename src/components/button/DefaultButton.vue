@@ -1,6 +1,9 @@
 <template>
-  <v-btn class="default-button text-none" :disabled="isDisabled"
-    :style="{ backgroundColor: colors[buttonColor], color: colors[textColor] }">
+  <v-btn
+    class="default-button text-none"
+    :disabled="isDisabled"
+    :style="{ backgroundColor: colors[buttonColor], color: colors[textColor] }"
+  >
     <div class="btn-body">
       <slot></slot>
     </div>
@@ -9,15 +12,15 @@
 
 <script>
 export default {
-  name: "DefaultButton",
+  name: 'DefaultButton',
   props: {
     isDisabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     buttonColor: {
       type: String,
-      default: 'white',
+      default: 'white'
     },
     textColor: {
       type: String,
@@ -30,15 +33,16 @@ export default {
         primaryColor: '#172B4D',
         white: '#ffffff',
         black: '#3d3f4e',
-        gray: "#00000033",
+        gray: '#00000033',
         brown: '#00000080',
-        cardColor: "#f1f2f4",
-        blue: "#0C66E4",
-        cardDetailColor: '#091e420f'
+        cardColor: '#f1f2f4',
+        blue: '#0C66E4',
+        cardDetailColor: '#091e420f',
+        danger: '#bb2124'
       }
-    };
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -48,7 +52,6 @@ export default {
 
 .v-btn--elevated:focus {
   box-shadow: unset;
-
 }
 
 .v-btn--density-default {
@@ -63,7 +66,6 @@ export default {
     font-size: 14px !important;
     font-weight: 500 !important;
   }
-
 }
 
 .v-btn--density-default:hover {

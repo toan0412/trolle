@@ -4,14 +4,20 @@
       <DefaultButton class="board-name-container">test</DefaultButton>
       <IconButton icon="mdi-star-outline"></IconButton>
       <DefaultButton prepend-icon="mdi-lock-outline">Riêng tư</DefaultButton>
-      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-chart-box-outline">Bảng</DefaultButton>
+      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-chart-box-outline"
+        >Bảng</DefaultButton
+      >
       <IconButton icon="mdi-chevron-down"></IconButton>
     </div>
     <div class="board-header-item">
+      <DefaultButton @click="addFakeData" buttonColor="danger" textColor="white"
+        >Fake data</DefaultButton
+      >
       <DefaultButton prepend-icon="mdi-rocket-launch-outline">Tiện ích bổ sung</DefaultButton>
       <DefaultButton prepend-icon="mdi-flash-outline">Tự động hóa</DefaultButton>
       <DefaultButton prepend-icon="mdi-filter-variant">Bộ lọc</DefaultButton>
-      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-account-plus-outline">Chia sẻ
+      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-account-plus-outline"
+        >Chia sẻ
       </DefaultButton>
       <IconButton icon="mdi-dots-horizontal"></IconButton>
     </div>
@@ -27,13 +33,22 @@
           </div>
           <!-- card body -->
           <ol class="list-cards">
-            <draggable class="list-group" :list="column.list" group="people" @change="onDragChange(columnIndex)"
-              itemKey="id">
+            <draggable
+              class="list-group"
+              :list="column.list"
+              group="people"
+              @change="onDragChange(columnIndex)"
+              itemKey="id"
+            >
               <template #item="{ element }">
                 <div class="list-group-item">
                   <li @click="showCardDetail(element, column)">
                     <a>{{ element.header }}</a>
-                    <IconButton @click="handleDeleteCard(column, element)" class="remove-icon" icon="mdi-close">
+                    <IconButton
+                      @click="handleDeleteCard(column, element)"
+                      class="remove-icon"
+                      icon="mdi-close"
+                    >
                     </IconButton>
                   </li>
                 </div>
@@ -43,16 +58,30 @@
           <!-- card footer -->
           <div class="list-footer">
             <div v-if="currentFormIndex === columnIndex" class="add-card-form__show">
-              <v-textarea v-model="newCardName" rows="1" placeholder="Nhập tên cho thẻ này ..." variant="outlined"
-                auto-grow shaped hide-details></v-textarea>
-              <div class="add-form-actions" style="padding:4px">
-                <DefaultButton @click="addCard(columnIndex)" textColor="white" buttonColor="blue">Thêm thẻ</DefaultButton>
+              <v-textarea
+                v-model="newCardName"
+                rows="1"
+                placeholder="Nhập tên cho thẻ này ..."
+                variant="outlined"
+                auto-grow
+                shaped
+                hide-details
+              >
+              </v-textarea>
+              <div class="add-form-actions" style="padding: 4px">
+                <DefaultButton @click="addCard(columnIndex)" textColor="white" buttonColor="blue"
+                  >Thêm thẻ</DefaultButton
+                >
                 <IconButton @click="toggleAddForm(-1)" icon="mdi-close"></IconButton>
               </div>
             </div>
 
             <div v-else class="add-card-form__close">
-              <DefaultButton @click="toggleAddForm(columnIndex)" prepend-icon="mdi-plus" buttonColor="cardColor">Thêm thẻ
+              <DefaultButton
+                @click="toggleAddForm(columnIndex)"
+                prepend-icon="mdi-plus"
+                buttonColor="cardColor"
+                >Thêm thẻ
               </DefaultButton>
               <IconButton icon="mdi-content-copy"></IconButton>
             </div>
@@ -61,16 +90,24 @@
       </li>
       <!-- new column -->
       <li class="board-column">
-        <div class="card-item" style="padding-bottom: 0;">
+        <div class="card-item" style="padding-bottom: 0">
           <div class="new-column">
             <!-- check if new column -->
             <div v-if="isNewColumn" class="new-column-close">
               <div class="list-footer">
                 <div class="add-card-form__show">
-                  <v-textarea v-model="newColumnName" rows="1" placeholder="Nhập tiêu đề danh sách ..." variant="outlined"
-                    auto-grow shaped hide-details></v-textarea>
-                  <div class="add-form-actions" style="padding:4px 8px 12px">
-                    <DefaultButton @click="addNewColumn" textColor="white" buttonColor="blue">Thêm danh sách
+                  <v-textarea
+                    v-model="newColumnName"
+                    rows="1"
+                    placeholder="Nhập tiêu đề danh sách ..."
+                    variant="outlined"
+                    auto-grow
+                    shaped
+                    hide-details
+                  ></v-textarea>
+                  <div class="add-form-actions" style="padding: 4px 8px 12px">
+                    <DefaultButton @click="addNewColumn" textColor="white" buttonColor="blue"
+                      >Thêm danh sách
                     </DefaultButton>
                     <IconButton @click="toggleNewColumn" icon="mdi-close"></IconButton>
                   </div>
@@ -79,9 +116,13 @@
             </div>
             <!-- check else new column -->
             <div v-else class="new-column-open">
-              <DefaultButton v-model="newColumnName" @click="toggleNewColumn" class="new-column-button"
-                style="background-color: #7f7f7f; color: white" prepend-icon="mdi-plus">Thêm
-                danh sách khác
+              <DefaultButton
+                v-model="newColumnName"
+                @click="toggleNewColumn"
+                class="new-column-button"
+                style="background-color: #7f7f7f; color: white"
+                prepend-icon="mdi-plus"
+                >Thêm danh sách khác
               </DefaultButton>
             </div>
           </div>
@@ -95,10 +136,10 @@
 </template>
 
 <script>
-import DefaultButton from '@/components/button/DefaultButton.vue';
-import IconButton from '@/components/button/IconButton.vue';
-import draggable from 'vuedraggable';
-import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js';
+import DefaultButton from '@/components/button/DefaultButton.vue'
+import IconButton from '@/components/button/IconButton.vue'
+import draggable from 'vuedraggable'
+import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js'
 import CardDetail from './CardDetail.vue'
 
 export default {
@@ -107,7 +148,6 @@ export default {
     DefaultButton,
     IconButton,
     draggable,
-    BaseIndexedDB,
     CardDetail
   },
   data() {
@@ -117,17 +157,22 @@ export default {
       newCardName: '',
       isNewColumn: false,
       newColumnName: '',
-      selectedCard: null,
-      selectedColumn: null,
-    };
+      selectedCard: {
+        header: '',
+        createdAt: null,
+        desc: '',
+        activity: ''
+      },
+      selectedColumn: null
+    }
   },
   methods: {
     //Bật, tắt form thêm card
     toggleAddForm(index) {
       if (this.currentFormIndex === index) {
-        this.currentFormIndex = -1;
+        this.currentFormIndex = -1
       } else {
-        this.currentFormIndex = index;
+        this.currentFormIndex = index
       }
     },
     //Bật tắt thêm cột mới
@@ -136,58 +181,24 @@ export default {
     },
     //Hàm lấy dữ liệu từ indexedDB
     async loadData() {
-      this.category = (await BaseIndexedDB.getAllData()) || [];
+      this.category = (await BaseIndexedDB.getAllData()) || []
     },
     //Hàm thêm dữ liêu vào indexedDB
     async addDB(data) {
       await BaseIndexedDB.addData(data)
-    },
-    async addFakeData() {
-      await this.addDB({
-        ID: 1,
-        type: "Cần làm",
-        list: [
-          { header: 'Ngủ dậy', createdAt: Date.now() },
-          { header: 'Ăn sáng', createdAt: Date.now() },
-          { header: 'Tắm rửa', createdAt: Date.now() },
-          { header: 'Đánh răng', createdAt: Date.now() },
-        ],
-      });
-      await this.addDB({
-        ID: 2,
-        type: "Đã xong",
-        list: [
-          { header: 'Mặc quần áo', createdAt: Date.now() },
-          { header: 'Đi học', createdAt: Date.now() },
-          { header: 'Làm bài tập', createdAt: Date.now() },
-        ],
-      });
-      await this.addDB({
-        ID: 3,
-        type: "Đang làm",
-        list: [
-          { header: 'Đi vệ sinh', createdAt: Date.now() },
-          { header: 'Vệ sinh cá nhân', createdAt: Date.now() },
-          { header: 'Rửa mặt', createdAt: Date.now() },
-        ],
-      });
-
       this.loadData()
     },
     async addCard(columnIndex) {
-      if (!this.newCardName.trim()) {
-        return;
-      }
+      if (!this.newCardName.trim()) return
 
       try {
-        const column = this.category[columnIndex];
+        const column = this.category[columnIndex]
         const newCard = { header: this.newCardName, createdAt: Date.now() }
 
         column.list.push(newCard)
 
         // Cập nhật cột trong IndexedDB
         this.addDB(column)
-        this.loadData()
 
         // Xóa dữ liệu trong trường nhập liệu sau khi thêm thẻ
         this.resetAddForm()
@@ -195,12 +206,45 @@ export default {
         console.error('Failed to add card:', error)
       }
     },
+    //Fake data
+    async addFakeData() {
+      await this.addDB({
+        ID: 1,
+        type: 'Cần làm',
+        list: [
+          { header: 'Ngủ dậy', createdAt: Date.now() },
+          { header: 'Ăn sáng', createdAt: Date.now() },
+          { header: 'Tắm rửa', createdAt: Date.now() },
+          { header: 'Đánh răng', createdAt: Date.now() }
+        ]
+      })
+      await this.addDB({
+        ID: 2,
+        type: 'Đã xong',
+        list: [
+          { header: 'Mặc quần áo', createdAt: Date.now() },
+          { header: 'Đi học', createdAt: Date.now() },
+          { header: 'Làm bài tập', createdAt: Date.now() }
+        ]
+      })
+      await this.addDB({
+        ID: 3,
+        type: 'Đang làm',
+        list: [
+          { header: 'Đi vệ sinh', createdAt: Date.now() },
+          { header: 'Vệ sinh cá nhân', createdAt: Date.now() },
+          { header: 'Rửa mặt', createdAt: Date.now() }
+        ]
+      })
+
+      this.loadData()
+    },
     //Hàm cập nhật indexedDB khi drag and drop card
     async onDragChange(columnIndex) {
       const column = this.category[columnIndex]
 
       try {
-        await this.addDB(column);
+        await this.addDB(column)
       } catch (error) {
         console.error('Failed to update column:', error)
       }
@@ -209,26 +253,27 @@ export default {
     handleDeleteCard(column, card) {
       const index = column.list.indexOf(card)
       if (index > -1) {
-        column.list.splice(index, 1);
+        column.list.splice(index, 1)
       }
       this.addDB(column)
     },
     //Hàm reset add card form
     resetAddForm() {
-      this.newCardName = '';
-      this.toggleAddForm(-1);
+      this.newCardName = ''
+      this.toggleAddForm(-1)
     },
     //Hàm thêm danh sách mới
     addNewColumn() {
-      const countColumn = this.category.length;
+      //Tạo ID cột mới
+      const countColumn = this.category.length
       const newColumnID = countColumn + 1
       if (!this.newColumnName.trim()) {
-        return;
+        return
       }
       const newColumn = { ID: newColumnID, type: this.newColumnName, list: [] }
       this.category.push(newColumn)
       this.addDB(newColumn)
-      this.toggleNewColumn();
+      this.toggleNewColumn()
       this.newColumnName = ''
     },
     //Hiển thị chi tiết thẻ
@@ -239,9 +284,9 @@ export default {
     }
   },
   mounted() {
-    this.addFakeData();
-  },
-};
+    this.loadData()
+  }
+}
 </script>
 
 <style lang="scss">
@@ -390,7 +435,7 @@ export default {
       cursor: pointer;
 
       .v-field__input {
-        font-size: 14px
+        font-size: 14px;
       }
     }
   }

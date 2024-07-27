@@ -20,36 +20,73 @@
             <!-- card-detail-notifycation -->
             <div class="card-detail-notifycation">
               <div class="font-weight-bold">Thông báo</div>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-eye-outline">Theo dõi</DefaultButton>
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-eye-outline"
+                >Theo dõi</DefaultButton
+              >
             </div>
             <!-- card-detail-desc -->
             <div class="card-detail-desc">
-              <DefaultButton class="button-text-bold" prepend-icon="mdi-format-list-bulleted">Mô tả</DefaultButton>
-              <DefaultButton @click="toogleDescAreaEditor" v-if="isDescAreaEditor" buttonColor="cardDetailColor"
-                class="add-desc-button">
+              <DefaultButton class="button-text-bold" prepend-icon="mdi-format-list-bulleted"
+                >Mô tả</DefaultButton
+              >
+              <DefaultButton
+                @click="toogleDescAreaEditor"
+                v-if="isDescAreaEditor"
+                buttonColor="cardDetailColor"
+                class="add-desc-button"
+              >
                 {{ cardDetail.desc || 'Thêm mô tả chi tiết hơn' }}
               </DefaultButton>
               <div v-else class="mgl-40">
-                <v-textarea v-model="cardDetailDesc" rows="5" placeholder="Nhập mô tả ..." variant="outlined" auto-grow
-                  shaped hide-details></v-textarea>
+                <v-textarea
+                  v-model="cardDetailDesc"
+                  rows="5"
+                  placeholder="Nhập mô tả ..."
+                  variant="outlined"
+                  auto-grow
+                  shaped
+                  hide-details
+                ></v-textarea>
                 <div class="card-detail-desc-actions">
-                  <DefaultButton buttonColor="blue" textColor="white" @click="addDesc">Lưu</DefaultButton>
-                  <DefaultButton @click="toogleDescAreaEditor" colorButton="white">Hủy</DefaultButton>
+                  <DefaultButton buttonColor="blue" textColor="white" @click="editDesc"
+                    >Lưu</DefaultButton
+                  >
+                  <DefaultButton @click="toogleDescAreaEditor" colorButton="white"
+                    >Hủy</DefaultButton
+                  >
                 </div>
               </div>
             </div>
             <!-- card-detail-activity -->
             <div class="card-detail-activity">
-              <DefaultButton class="button-text-bold" prepend-icon="mdi-clipboard-list-outline">Hoạt động</DefaultButton>
-              <DefaultButton @click="toogleActivityAreaEditor" v-if="isActivityAreaEditor" buttonColor="white"
-                class="add-activity-button">
-                {{ cardDetail.activity || "Nhập hoạt động ..." }}</DefaultButton>
+              <DefaultButton class="button-text-bold" prepend-icon="mdi-clipboard-list-outline"
+                >Hoạt động</DefaultButton
+              >
+              <DefaultButton
+                @click="toogleActivityAreaEditor"
+                v-if="isActivityAreaEditor"
+                buttonColor="white"
+                class="add-activity-button"
+              >
+                {{ cardDetail.activity || 'Nhập hoạt động ...' }}</DefaultButton
+              >
               <div v-else class="mgl-40">
-                <v-textarea v-model="cardDetailActivity" rows="2" placeholder="Nhập hoạt động ..." variant="outlined"
-                  auto-grow shaped hide-details></v-textarea>
+                <v-textarea
+                  v-model="cardDetailActivity"
+                  rows="2"
+                  placeholder="Nhập hoạt động ..."
+                  variant="outlined"
+                  auto-grow
+                  shaped
+                  hide-details
+                ></v-textarea>
                 <div class="card-detail-desc-actions">
-                  <DefaultButton @click="addActivity" buttonColor="blue" textColor="white">Lưu</DefaultButton>
-                  <DefaultButton @click="toogleActivityAreaEditor" colorButton="white">Hủy</DefaultButton>
+                  <DefaultButton @click="editActivity" buttonColor="blue" textColor="white"
+                    >Lưu</DefaultButton
+                  >
+                  <DefaultButton @click="toogleActivityAreaEditor" colorButton="white"
+                    >Hủy</DefaultButton
+                  >
                 </div>
               </div>
             </div>
@@ -58,38 +95,69 @@
           <div class="card-detail-actions">
             <div class="group-actions">
               <div class="font-weight-bold">Thêm vào thẻ</div>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-account-outline">Thành viên</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-label-multiple-outline">Nhãn</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-checkbox-marked-circle-outline">Việc cần làm
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-account-outline"
+                >Thành viên</DefaultButton
+              >
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-label-multiple-outline"
+                >Nhãn</DefaultButton
+              >
+              <DefaultButton
+                buttonColor="cardDetailColor"
+                prepend-icon="mdi-checkbox-marked-circle-outline"
+                >Việc cần làm
               </DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-clock-outline">Ngày</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-attachment">Đính kèm</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-image-size-select-actual">Ảnh bìa
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-clock-outline"
+                >Ngày</DefaultButton
+              >
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-attachment"
+                >Đính kèm</DefaultButton
+              >
+              <DefaultButton
+                buttonColor="cardDetailColor"
+                prepend-icon="mdi-image-size-select-actual"
+                >Ảnh bìa
               </DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-adjust">Trường tùy chỉnh</DefaultButton>
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-adjust"
+                >Trường tùy chỉnh</DefaultButton
+              >
             </div>
             <div class="group-actions">
               <div class="font-weight-bold">Tiện ích bổ sung</div>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus">Thêm tiện ích bổ sung</DefaultButton>
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus"
+                >Thêm tiện ích bổ sung</DefaultButton
+              >
             </div>
             <div class="group-actions">
               <div class="font-weight-bold">Tự động hóa</div>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus">Thêm nút</DefaultButton>
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus"
+                >Thêm nút</DefaultButton
+              >
             </div>
             <div class="group-actions">
               <div class="font-weight-bold">Thao tác</div>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-arrow-right">Di chuyển</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-content-copy">Sao chép</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus">Di chuyển</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-account-convert-outline">Tạo mẫu
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-arrow-right"
+                >Di chuyển</DefaultButton
+              >
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-content-copy"
+                >Sao chép</DefaultButton
+              >
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-plus"
+                >Di chuyển</DefaultButton
+              >
+              <DefaultButton
+                buttonColor="cardDetailColor"
+                prepend-icon="mdi-account-convert-outline"
+                >Tạo mẫu
               </DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-archive-outline">Lưu trữ</DefaultButton>
-              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-share-variant-outline">Chia sẻ
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-archive-outline"
+                >Lưu trữ</DefaultButton
+              >
+              <DefaultButton buttonColor="cardDetailColor" prepend-icon="mdi-share-variant-outline"
+                >Chia sẻ
               </DefaultButton>
             </div>
           </div>
         </div>
-        {{ cardDetail }}
       </v-card>
     </v-dialog>
   </div>
@@ -97,6 +165,7 @@
 <script>
 import IconButton from '@/components/button/IconButton.vue'
 import DefaultButton from '@/components/button/DefaultButton.vue'
+import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js'
 
 export default {
   name: 'CardDetail',
@@ -106,16 +175,18 @@ export default {
       isDescAreaEditor: true,
       isActivityAreaEditor: true,
       cardDetailDesc: '',
-      cardDetailActivity: '',
-    };
+      cardDetailActivity: ''
+    }
   },
 
   methods: {
     openDialog() {
-      this.dialog = true;
+      this.dialog = true
+      this.resetTextArea()
     },
     closeDialog() {
-      this.dialog = false;
+      this.dialog = false
+      this.editData(this.columnDetail)
     },
     toogleDescAreaEditor() {
       this.isDescAreaEditor = !this.isDescAreaEditor
@@ -123,43 +194,78 @@ export default {
     toogleActivityAreaEditor() {
       this.isActivityAreaEditor = !this.isActivityAreaEditor
     },
-    addDesc() {
-      if (this.cardDetailDesc.trim() === '') return
-      this.cardDetail.desc = this.cardDetailDesc
-      this.cardDetailDesc = ''
-      this.toogleDescAreaEditor()
+
+    //hàm cập nhật indexedDB
+    async editData(data) {
+      //Hàm add có kiểm tra key khi trùng nên dùng chung( trong trường hợp trùng key thì thành edit)
+      await BaseIndexedDB.addData(data)
+      this.loadData()
     },
-    addActivity() {
+
+    async loadData() {
+      this.category = (await BaseIndexedDB.getAllData()) || []
+    },
+
+    //hàm thêm(sửa) desc card
+    editDesc() {
+      if (this.cardDetailDesc.trim() === '') return
+      //tìm card trong column
+      let indexCard = this.columnDetail.list.findIndex(
+        (obj) => obj.header === this.cardDetail.header
+      )
+
+      if (indexCard !== -1) {
+        this.columnDetail.list[indexCard].desc = this.cardDetailDesc
+      }
+      //đóng form thêm/sửa desc
+      this.isDescAreaEditor = true
+    },
+    //hàm thêm(sửa) activity card
+    editActivity() {
       if (this.cardDetailActivity.trim() === '') return
-      this.cardDetail.activity = this.cardDetailActivity
-      this.cardDetailActivity = ''
+      //tìm card trong column
+      let indexCard = this.columnDetail.list.findIndex(
+        (obj) => obj.header === this.cardDetail.header
+      )
+
+      if (indexCard !== -1) {
+        this.columnDetail.list[indexCard].activity = this.cardDetailActivity
+      }
+
+      //đóng form thêm/sửa desc
       this.toogleActivityAreaEditor()
+    },
+    //reset text area desc và activity
+    resetTextArea() {
+      this.isDescAreaEditor = true
+      this.isActivityAreaEditor = true
+      if (this.cardDetail.desc && this.cardDetail.desc !== '') this.cardDetailDesc = ''
+      if (this.cardDetail.activity && this.cardDetail.activity !== '') this.cardDetailActivity = ''
+      console.log('reset được gọi')
     }
   },
 
   components: {
     IconButton,
-    DefaultButton,
+    DefaultButton
   },
 
   props: {
     cardDetail: Object,
-    columnDetail: Object,
+    columnDetail: Object
   },
 
   watch: {
     cardDetail: {
       handler(newValue) {
         if (!newValue) return
-        if (newValue.desc != null)
-          this.cardDetailDesc = newValue.desc;
-        if (newValue.activity != null)
-          this.cardDetailActivity = newValue.activity;
+        if (newValue.desc != null) this.cardDetailDesc = newValue.desc
+        if (newValue.activity != null) this.cardDetailActivity = newValue.activity
       },
       immediate: true
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -264,6 +370,7 @@ header {
     width: 512px;
     height: 56px !important;
     margin-left: 40px !important;
+    justify-content: flex-start;
   }
 
   .add-activity-button {
@@ -298,7 +405,6 @@ header {
     margin-left: 0 !important;
     margin-bottom: 8px !important;
     width: 168px;
-
   }
 }
 
@@ -310,6 +416,6 @@ header {
 
 .mgl-40 {
   margin-left: 40px;
-  margin-top: 8px
+  margin-top: 8px;
 }
 </style>
