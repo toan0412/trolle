@@ -10,7 +10,7 @@
       <IconButton icon="mdi-chevron-down"></IconButton>
     </div>
     <div class="board-header-item">
-      <DefaultButton @click="addFakeData" buttonColor="danger" textColor="white"
+      <DefaultButton @click="showFakeDataDialog" buttonColor="danger" textColor="white"
         >Fake data</DefaultButton
       >
       <DefaultButton prepend-icon="mdi-rocket-launch-outline">Tiện ích bổ sung</DefaultButton>
@@ -29,7 +29,10 @@
           <!-- card header -->
           <div class="list-header">
             <p class="list-header-name">{{ column.type }}</p>
-            <IconButton icon="mdi-dots-horizontal"></IconButton>
+            <IconButton
+              @click="showColumnDeleteDialog(columnIndex)"
+              icon="mdi-dots-horizontal"
+            ></IconButton>
           </div>
           <!-- card body -->
           <ol class="list-cards">
@@ -42,10 +45,10 @@
             >
               <template #item="{ element }">
                 <div class="list-group-item">
-                  <li @click="showCardDetail(element, column)">
-                    <a>{{ element.header }}</a>
+                  <li>
+                    <a @click="showCardDetail(element, column)">{{ element.header }}</a>
                     <IconButton
-                      @click="handleDeleteCard(column, element)"
+                      @click="showCardDeleteDialog(column, element)"
                       class="remove-icon"
                       icon="mdi-close"
                     >
@@ -132,6 +135,23 @@
   </div>
   <div>
     <CardDetail :cardDetail="selectedCard" :columnDetail="selectedColumn" ref="cardDetail" />
+    <ConfirmDialog
+      ref="deleteCardDialog"
+      message="Bạn có chắc chắn muốn xoá thẻ đang chọn không?"
+      @response="handleResponseDeleteCardDialog"
+    />
+    <ConfirmDialog
+      ref="fakeDataDialog"
+      message="Bạn có chắc chắn muốn tạo dữ liệu ảo không?
+      Các dữ liệu hiện có sẽ bị mất"
+      @response="handleResponseFakeDataDialog"
+    />
+    <ConfirmDialog
+      ref="deleteColumnDialog"
+      message="Bạn có chắc chắn muốn xoá danh sách đang chọn không?"
+      @response="handleResponseDeleteColumnDialog"
+    />
+    <Toast ref="snackbar" />
   </div>
 </template>
 
@@ -141,6 +161,7 @@ import IconButton from '@/components/button/IconButton.vue'
 import draggable from 'vuedraggable'
 import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js'
 import CardDetail from './CardDetail.vue'
+import { defineAsyncComponent } from 'vue'
 
 export default {
   name: 'HomePage',
@@ -148,7 +169,9 @@ export default {
     DefaultButton,
     IconButton,
     draggable,
-    CardDetail
+    CardDetail,
+    ConfirmDialog: defineAsyncComponent(() => import('@/components/dialog/ConfirmDialog.vue')),
+    Toast: defineAsyncComponent(() => import('@/components/toast/toast.vue'))
   },
   data() {
     return {
@@ -163,7 +186,8 @@ export default {
         desc: '',
         activity: ''
       },
-      selectedColumn: null
+      selectedColumn: null,
+      selectedIndexColumn: null
     }
   },
   methods: {
@@ -184,10 +208,15 @@ export default {
       this.category = (await BaseIndexedDB.getAllData()) || []
     },
     //Hàm thêm dữ liêu vào indexedDB
-    async addDB(data) {
+    async addDataToDB(data) {
       await BaseIndexedDB.addData(data)
       this.loadData()
     },
+    async deleteDataFromDB(key) {
+      await BaseIndexedDB.deleteData(key)
+      this.loadData()
+    },
+    //Hàm thêm card
     async addCard(columnIndex) {
       if (!this.newCardName.trim()) return
 
@@ -198,17 +227,18 @@ export default {
         column.list.push(newCard)
 
         // Cập nhật cột trong IndexedDB
-        this.addDB(column)
+        this.addDataToDB(column)
 
         // Xóa dữ liệu trong trường nhập liệu sau khi thêm thẻ
         this.resetAddForm()
+        this.triggerSnackbar('success', 'Thành công', 'Thêm thẻ mới thành công')
       } catch (error) {
         console.error('Failed to add card:', error)
       }
     },
     //Fake data
     async addFakeData() {
-      await this.addDB({
+      await this.addDataToDB({
         ID: 1,
         type: 'Cần làm',
         list: [
@@ -218,7 +248,7 @@ export default {
           { header: 'Đánh răng', createdAt: Date.now() }
         ]
       })
-      await this.addDB({
+      await this.addDataToDB({
         ID: 2,
         type: 'Đã xong',
         list: [
@@ -227,7 +257,7 @@ export default {
           { header: 'Làm bài tập', createdAt: Date.now() }
         ]
       })
-      await this.addDB({
+      await this.addDataToDB({
         ID: 3,
         type: 'Đang làm',
         list: [
@@ -244,18 +274,55 @@ export default {
       const column = this.category[columnIndex]
 
       try {
-        await this.addDB(column)
+        await this.addDataToDB(column)
       } catch (error) {
         console.error('Failed to update column:', error)
       }
     },
-    //Hàm xóa card
+    //handleResponseDeleteDialog
+    handleResponseDeleteCardDialog(answer) {
+      if (!answer) return
+      this.handleDeleteCard(this.selectedColumn, this.selectedCard)
+    },
+    handleResponseDeleteColumnDialog(answer) {
+      if (!answer) return
+      this.handleDeleteColumn(this.selectedIndexColumn)
+    },
+    handleResponseFakeDataDialog(answer) {
+      if (!answer) return
+      this.addFakeData()
+      this.triggerSnackbar('success', 'Thành công', 'Thêm dữ liệu ảo thành công')
+    },
+
+    //hiển thị dialog cảnh báo
+    showCardDeleteDialog(column, card) {
+      this.selectedCard = card
+      this.selectedColumn = column
+      this.$refs.deleteCardDialog.openDialog()
+    },
+
+    showColumnDeleteDialog(columnIndex) {
+      this.selectedIndexColumn = columnIndex + 1
+      this.$refs.deleteColumnDialog.openDialog()
+    },
+
+    showFakeDataDialog() {
+      this.$refs.fakeDataDialog.openDialog()
+    },
+
+    //Hàm xóa thẻ
     handleDeleteCard(column, card) {
       const index = column.list.indexOf(card)
       if (index > -1) {
         column.list.splice(index, 1)
       }
-      this.addDB(column)
+      this.addDataToDB(column)
+      this.triggerSnackbar('success', 'Thành công', 'Xoá thẻ thành công')
+    },
+    //Hàm xóa danh sách
+    handleDeleteColumn(columnIndex) {
+      this.deleteDataFromDB(columnIndex)
+      this.triggerSnackbar('success', 'Thành công', 'Xoá danh sách thành công')
     },
     //Hàm reset add card form
     resetAddForm() {
@@ -272,15 +339,20 @@ export default {
       }
       const newColumn = { ID: newColumnID, type: this.newColumnName, list: [] }
       this.category.push(newColumn)
-      this.addDB(newColumn)
+      this.addDataToDB(newColumn)
       this.toggleNewColumn()
       this.newColumnName = ''
+      this.triggerSnackbar('success', 'Thành công', 'Thêm danh sách mới thành công')
     },
     //Hiển thị chi tiết thẻ
     showCardDetail(card, column) {
       this.selectedCard = card
       this.selectedColumn = column
       this.$refs.cardDetail.openDialog()
+    },
+    //Hàm gọi Toast
+    triggerSnackbar(type, title, message) {
+      this.$refs.snackbar.showSnackbar(type, title, message)
     }
   },
   mounted() {

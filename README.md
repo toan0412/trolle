@@ -1,4 +1,4 @@
-JUST A TRELLO CLONE
+# JUST A TRELLO CLONE
 
 # vue-project
 
