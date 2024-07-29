@@ -1,65 +1,54 @@
 <template>
-  <div class="row">
-    <div class="col-3">
-      <h3>Draggable 1</h3>
-      <draggable class="list-group" :list="list1" group="people" @change="log" itemKey="name">
-        <template #item="{ element, index }">
-          <div class="list-group-item">{{ element.name }} {{ index }}</div>
-        </template>
-      </draggable>
-    </div>
-
-    <div class="col-3">
-      <h3>Draggable 2</h3>
-      <draggable class="list-group" :list="list2" group="people" @change="log" itemKey="name">
-        <template #item="{ element, index }">
-          <div class="list-group-item">{{ element.name }} {{ index }}</div>
-        </template>
-      </draggable>
-    </div>
-
+  <div>
+    <ul id="messages">
+      <li v-for="message in messages" :key="message">{{ message }}</li>
+    </ul>
+    <form @submit.prevent="sendMessage">
+      <input v-model="message" autocomplete="off" />
+      <button>Send</button>
+    </form>
   </div>
 </template>
+
 <script>
-import draggable from "vuedraggable";
+import io from 'socket.io-client';
 
 export default {
-  name: "two-lists",
-  display: "Two Lists",
-  order: 1,
-  components: {
-    draggable
-  },
   data() {
     return {
-      list1: [
-        { name: "John", id: 1 },
-        { name: "Joao", id: 2 },
-        { name: "Jean", id: 3 },
-        { name: "Gerard", id: 4 }
-      ],
-      list2: [
-        { name: "Juan", id: 5 },
-        { name: "Edgard", id: 6 },
-        { name: "Johnson", id: 7 }
-      ]
+      socket: null,
+      message: '',
+      messages: [],
     };
   },
+  mounted() {
+    this.socket = io('https://f5d348c9-3e9a-4a0a-9cc0-b46035be571c-00-2suhoo6y70ed8.pike.replit.dev:3002');
+
+    this.socket.on('chat message', (msg) => {
+      this.messages.push(msg);
+    });
+  },
   methods: {
-    add: function () {
-      this.list.push({ name: "Juan" });
+    sendMessage() {
+      if (this.message.trim() !== '') {
+        this.socket.emit('chat message', this.message);
+        this.message = '';
+      }
     },
-    replace: function () {
-      this.list = [{ name: "Edgard" }];
-    },
-    clone: function (el) {
-      return {
-        name: el.name + " cloned"
-      };
-    },
-    log: function (evt) {
-      window.console.log(evt);
-    }
-  }
+  },
 };
 </script>
+
+<style scoped>
+#messages {
+  list-style-type: none;
+  padding: 0;
+}
+
+#messages li {
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: #f4f4f4;
+  border-radius: 4px;
+}
+</style>

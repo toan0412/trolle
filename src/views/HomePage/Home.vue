@@ -4,20 +4,15 @@
       <DefaultButton class="board-name-container">test</DefaultButton>
       <IconButton icon="mdi-star-outline"></IconButton>
       <DefaultButton prepend-icon="mdi-lock-outline">Riêng tư</DefaultButton>
-      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-chart-box-outline"
-        >Bảng</DefaultButton
-      >
+      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-chart-box-outline">Bảng</DefaultButton>
       <IconButton icon="mdi-chevron-down"></IconButton>
     </div>
     <div class="board-header-item">
-      <DefaultButton @click="showFakeDataDialog" buttonColor="danger" textColor="white"
-        >Fake data</DefaultButton
-      >
+      <DefaultButton @click="showFakeDataDialog" buttonColor="danger" textColor="white">Fake data</DefaultButton>
       <DefaultButton prepend-icon="mdi-rocket-launch-outline">Tiện ích bổ sung</DefaultButton>
       <DefaultButton prepend-icon="mdi-flash-outline">Tự động hóa</DefaultButton>
       <DefaultButton prepend-icon="mdi-filter-variant">Bộ lọc</DefaultButton>
-      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-account-plus-outline"
-        >Chia sẻ
+      <DefaultButton textColor="white" buttonColor="brown" prepend-icon="mdi-account-plus-outline">Chia sẻ
       </DefaultButton>
       <IconButton icon="mdi-dots-horizontal"></IconButton>
     </div>
@@ -29,30 +24,18 @@
           <!-- card header -->
           <div class="list-header">
             <p class="list-header-name">{{ column.type }}</p>
-            <IconButton
-              @click="showColumnDeleteDialog(columnIndex)"
-              icon="mdi-trash-can-outline"
-              class="remove-column-icon"
-            ></IconButton>
+            <IconButton @click="showColumnDeleteDialog(columnIndex)" icon="mdi-trash-can-outline"
+              class="remove-column-icon"></IconButton>
           </div>
           <!-- card body -->
           <ol class="list-cards">
-            <draggable
-              class="list-group"
-              :list="column.list"
-              group="people"
-              @change="onDragChange(columnIndex)"
-              itemKey="id"
-            >
+            <draggable class="list-group" :list="column.list" group="people" @change="onDragChange(columnIndex)"
+              itemKey="id">
               <template #item="{ element }">
                 <div class="list-group-item">
                   <li>
                     <a @click="showCardDetail(element, column)">{{ element.header }}</a>
-                    <IconButton
-                      @click="showCardDeleteDialog(column, element)"
-                      class="remove-card-icon"
-                      icon="mdi-close"
-                    >
+                    <IconButton @click="showCardDeleteDialog(column, element)" class="remove-card-icon" icon="mdi-close">
                     </IconButton>
                   </li>
                 </div>
@@ -62,30 +45,17 @@
           <!-- card footer -->
           <div class="list-footer">
             <div v-if="currentFormIndex === columnIndex" class="add-card-form__show">
-              <v-textarea
-                v-model="newCardName"
-                rows="1"
-                placeholder="Nhập tên cho thẻ này ..."
-                variant="outlined"
-                auto-grow
-                shaped
-                hide-details
-              >
+              <v-textarea v-model="newCardName" rows="1" placeholder="Nhập tên cho thẻ này ..." variant="outlined"
+                auto-grow shaped hide-details>
               </v-textarea>
               <div class="add-form-actions" style="padding: 4px">
-                <DefaultButton @click="addCard(columnIndex)" textColor="white" buttonColor="blue"
-                  >Thêm thẻ</DefaultButton
-                >
+                <DefaultButton @click="addCard(columnIndex)" textColor="white" buttonColor="blue">Thêm thẻ</DefaultButton>
                 <IconButton @click="toggleAddForm(-1)" icon="mdi-close"></IconButton>
               </div>
             </div>
 
             <div v-else class="add-card-form__close">
-              <DefaultButton
-                @click="toggleAddForm(columnIndex)"
-                prepend-icon="mdi-plus"
-                buttonColor="cardColor"
-                >Thêm thẻ
+              <DefaultButton @click="toggleAddForm(columnIndex)" prepend-icon="mdi-plus" buttonColor="cardColor">Thêm thẻ
               </DefaultButton>
               <IconButton icon="mdi-content-copy"></IconButton>
             </div>
@@ -100,18 +70,10 @@
             <div v-if="isNewColumn" class="new-column-close">
               <div class="list-footer">
                 <div class="add-card-form__show">
-                  <v-textarea
-                    v-model="newColumnName"
-                    rows="1"
-                    placeholder="Nhập tiêu đề danh sách ..."
-                    variant="outlined"
-                    auto-grow
-                    shaped
-                    hide-details
-                  ></v-textarea>
+                  <v-textarea v-model="newColumnName" rows="1" placeholder="Nhập tiêu đề danh sách ..." variant="outlined"
+                    auto-grow shaped hide-details></v-textarea>
                   <div class="add-form-actions" style="padding: 4px 8px 12px">
-                    <DefaultButton @click="addNewColumn" textColor="white" buttonColor="blue"
-                      >Thêm danh sách
+                    <DefaultButton @click="addNewColumn" textColor="white" buttonColor="blue">Thêm danh sách
                     </DefaultButton>
                     <IconButton @click="toggleNewColumn" icon="mdi-close"></IconButton>
                   </div>
@@ -120,13 +82,8 @@
             </div>
             <!-- check else new column -->
             <div v-else class="new-column-open">
-              <DefaultButton
-                v-model="newColumnName"
-                @click="toggleNewColumn"
-                class="new-column-button"
-                style="background-color: #7f7f7f; color: white"
-                prepend-icon="mdi-plus"
-                >Thêm danh sách khác
+              <DefaultButton v-model="newColumnName" @click="toggleNewColumn" class="new-column-button"
+                style="background-color: #7f7f7f; color: white" prepend-icon="mdi-plus">Thêm danh sách khác
               </DefaultButton>
             </div>
           </div>
@@ -136,23 +93,16 @@
   </div>
   <div>
     <CardDetail :cardDetail="selectedCard" :columnDetail="selectedColumn" ref="cardDetail" />
-    <ConfirmDialog
-      ref="deleteCardDialog"
-      message="Bạn có chắc chắn muốn xoá thẻ đang chọn không?"
-      @response="handleResponseDeleteCardDialog"
-    />
-    <ConfirmDialog
-      ref="fakeDataDialog"
-      message="Bạn có chắc chắn muốn tạo dữ liệu ảo không?
-      Các dữ liệu hiện có sẽ bị mất"
-      @response="handleResponseFakeDataDialog"
-    />
-    <ConfirmDialog
-      ref="deleteColumnDialog"
-      message="Bạn có chắc chắn muốn xoá danh sách đang chọn không?"
-      @response="handleResponseDeleteColumnDialog"
-    />
+    <ConfirmDialog ref="deleteCardDialog" message="Bạn có chắc chắn muốn xoá thẻ đang chọn không?"
+      @response="handleResponseDeleteCardDialog" />
+    <ConfirmDialog ref="fakeDataDialog" message="Bạn có chắc chắn muốn tạo dữ liệu ảo không?
+      Các dữ liệu hiện có sẽ bị mất" @response="handleResponseFakeDataDialog" />
+    <ConfirmDialog ref="deleteColumnDialog" message="Bạn có chắc chắn muốn xoá danh sách đang chọn không?"
+      @response="handleResponseDeleteColumnDialog" />
     <Toast ref="snackbar" />
+  </div>
+  <div class="live-chat">
+    <LiveChat />
   </div>
 </template>
 
@@ -163,6 +113,7 @@ import draggable from 'vuedraggable'
 import BaseIndexedDB from '@/indexedDB/GridConfigIndexedDB.js'
 import CardDetail from './CardDetail.vue'
 import { defineAsyncComponent } from 'vue'
+import LiveChat from '@/components/livechat/LiveChat.vue'
 
 export default {
   name: 'HomePage',
@@ -172,7 +123,8 @@ export default {
     draggable,
     CardDetail,
     ConfirmDialog: defineAsyncComponent(() => import('@/components/dialog/ConfirmDialog.vue')),
-    Toast: defineAsyncComponent(() => import('@/components/toast/toast.vue'))
+    Toast: defineAsyncComponent(() => import('@/components/toast/toast.vue')),
+    LiveChat
   },
   data() {
     return {
@@ -523,12 +475,14 @@ export default {
       font-size: 14px !important;
     }
   }
+
   li:hover {
     .remove-card-icon {
       visibility: visible;
     }
   }
 }
+
 .remove-column-icon {
   visibility: hidden;
 }
@@ -546,5 +500,11 @@ export default {
   height: 44px !important;
   margin: 0 !important;
   border-radius: 12px !important;
+}
+
+.live-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 </style>
