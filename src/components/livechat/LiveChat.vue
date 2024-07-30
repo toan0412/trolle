@@ -9,7 +9,9 @@
         <div v-if="showLiveChatApp" class="live-chat-body-content">
           <div>
             <ul id="messages">
-              <li style="font-weight: 500">Chào mừng bạn đến với chat trực tuyến, vui lòng đợi để được CSKH hỗ trợ</li>
+              <li style="font-weight: 500">Chào mừng bạn đến với chat trực tuyến, vui lòng đợi để được bộ phận CSKH hỗ
+                trợ.
+              </li>
               <li v-for="message in messages" :key="message">{{ message }}</li>
             </ul>
             <form class="send-form" @submit.prevent="sendMessage">
@@ -19,16 +21,23 @@
           </div>
         </div>
         <div v-else class="live-chat-body-content">
-          <p style="font-weight: 500">Điền thông tin để bắt đầu đoạn chat</p>
-          <label>Vui lòng nhập họ và tên</label>
-          <input v-model="name" class="custom-input"></input>
-          <DefaultButton @click="toggleShowLiveChatApp" buttonColor="brown" textColor="white">Bắt đầu chat</DefaultButton>
+          <p style="font-weight: 500">Điền thông tin đăng nhập để bắt đầu đoạn chat</p>
+          <label>Nhập tên đăng nhập</label>
+          <input v-model="username" class="custom-input" />
+          <label>Nhập mật khẩu</label>
+          <input type="password" v-model="password" class="custom-input" />
+          <p v-if="loginFail" class="text-subtitle-2" style="color: red; font-size: 13px !important">Sai thông tin đăng
+            nhập hoặc mật khẩu,
+            vui lòng
+            thử lại</p>
+          <DefaultButton @click="login" buttonColor="brown" textColor="white">Bắt đầu chat</DefaultButton>
         </div>
       </div>
     </div>
   </div>
   <div v-else class="live-chat-logo">
-    <DefaultButton buttonColor="brown" textColor="white" @click="toggleShowLiveChatForm" prepend-icon="mdi-chat-processing-outline">Chat trực tuyến</DefaultButton>
+    <DefaultButton buttonColor="brown" textColor="white" @click="toggleShowLiveChatForm"
+      prepend-icon="mdi-chat-processing-outline">Chat trực tuyến</DefaultButton>
   </div>
 </template>
 
@@ -36,6 +45,7 @@
 import DefaultButton from '@/components/button/DefaultButton.vue'
 import IconButton from '@/components/button/IconButton.vue'
 import chatService from '@/services/chatService'
+import addTeacher from '@/services/UserService'
 
 export default {
   name: 'LiveChat',
@@ -43,9 +53,12 @@ export default {
     return {
       showLiveChatForm: false,
       showLiveChatApp: false,
-      name: '',
+      username: '',
+      password: '',
       message: '',
       messages: [],
+      currentUser: '',
+      loginFail: false,
     }
   },
   components: {
@@ -55,12 +68,12 @@ export default {
   methods: {
     toggleShowLiveChatForm() {
       this.showLiveChatForm = !this.showLiveChatForm;
+      this.resetForm()
     },
     toggleShowLiveChatApp() {
-      if(this.name.trim() === '') return
       this.showLiveChatApp = !this.showLiveChatApp;
       if (this.showLiveChatApp) {
-        chatService.joinChat(this.name);
+        chatService.joinChat(this.currentUser);
         chatService.onMessageReceived((msg) => {
           this.messages.push(msg);
         });
@@ -68,9 +81,29 @@ export default {
     },
     sendMessage() {
       if (this.message.trim() !== '') {
-        chatService.sendMessage(`${this.name}: ${this.message}`);
+        chatService.sendMessage(`${this.currentUser}: ${this.message}`);
         this.message = '';
       }
+    },
+    login() {
+      const user = {
+        UserName: this.username,
+        Password: this.password,
+      }
+      addTeacher(user)
+        .then(res => {
+          this.currentUser = res.user.UserName;
+          this.toggleShowLiveChatApp();
+        })
+        .catch(error => {
+          console.log('Login failed', error);
+          this.loginFail = true
+        })
+    },
+    resetForm() {
+      this.loginFail = false
+      this.username = ''
+      this.password = ''
     }
   },
   beforeDestroy() {
@@ -97,19 +130,23 @@ export default {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
+
   .live-chat-header-content {
     font-size: 16px;
     color: white;
     font-weight: 600;
   }
+
   .live-chat-body {
     padding: 16px;
+
     .live-chat-body-content {
       background-color: white;
       padding: 8px;
       border-radius: 4px;
       border: 1px solid #a5a5a5;
       height: 350px;
+
       .v-btn {
         width: 100%;
         padding: 6px 0;
@@ -117,14 +154,16 @@ export default {
         margin-left: 0;
       }
     }
-    .send-form{
+
+    .send-form {
       position: fixed;
       display: flex;
-      align-items:center;
+      align-items: center;
       bottom: 44px;
       width: 320px;
     }
   }
+
   .custom-input {
     width: 100%;
     border: 1px solid rgb(117, 117, 117);
@@ -141,7 +180,7 @@ export default {
     margin: 2px 0px;
   }
 
-  #messages{
+  #messages {
     list-style-type: none;
     margin-bottom: 50px;
     padding: 0 4px;

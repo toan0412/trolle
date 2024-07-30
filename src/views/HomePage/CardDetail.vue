@@ -155,12 +155,12 @@ export default {
     editActivity() {
       if (this.cardDetailActivity.trim() === '') return
       //tìm card trong column
-      let indexCard = this.columnDetail.list.findIndex(
+      let cardItem = this.columnDetail.list.find(
         (obj) => obj.header === this.cardDetail.header
       )
 
-      if (indexCard !== -1) {
-        this.columnDetail.list[indexCard].activity = this.cardDetailActivity
+      if (cardItem) {
+        cardItem.activity = this.cardDetailActivity
       }
 
       //đóng form thêm/sửa desc
@@ -170,8 +170,8 @@ export default {
     resetTextArea() {
       this.isDescAreaEditor = true
       this.isActivityAreaEditor = true
-      if (this.cardDetail.desc && this.cardDetail.desc != '') this.cardDetailDesc = ''
-      if (this.cardDetail.activity && this.cardDetail.activity != '') this.cardDetailActivity = ''
+      if (this.cardDetail.desc) this.cardDetailDesc = ''
+      if (this.cardDetail.activity) this.cardDetailActivity = ''
     }
   },
 

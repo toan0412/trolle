@@ -2,15 +2,18 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
-
+const authRoutes = require('./routes/user.route.cjs');
 const app = express();
 const server = http.createServer(app);
+const bodyParser = require('body-parser');
 
 // Cấu hình CORS cho Express
+app.use(bodyParser.json());
 app.use(cors({
     origin: '*',
     credentials: true
 }));
+app.use('/api/auth', authRoutes);
 
 // Cấu hình CORS cho Socket.io
 const io = socketIo(server, {
