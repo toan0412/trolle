@@ -120,6 +120,7 @@ export default {
           this.errorMessage = ''
         })
         .catch((error) => {
+          console.log('Login failed', error);
           this.errorMessage = "Tên đăng nhập hoặc mật khẩu không chính xác"
         });
     },
@@ -131,6 +132,7 @@ export default {
     },
     // Tạo phòng
     createRoom() {
+      if (this.roomName.trim() == '') return
       chatService.createRoom(this.roomName);
       chatService.onRoomCreated((room) => {
         this.$emit('roomCreated', room)
@@ -186,20 +188,18 @@ export default {
     });
   },
   beforeDestroy() {
-    chatService.discon
-    nect()
+    chatService.disconnect()
   }
 };
 </script>
 
 
 
-le lang="scss">
+<style lang="scss">
 .live-chat-wrapper {
   width: 368px;
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0.48px 2.41px -0.38px, rgba(0, 0, 0, 0.17) 0px 4px 20px -0.75px;
 
   .live-chat-header {
@@ -225,14 +225,15 @@ le lang="scss">
   }
 
   .live-chat-body {
-    padding: 16px;
+    padding: 8px 16px 32px;
+    background: rgb(248, 248, 248);
 
     .live-chat-body-content {
       background-color: white;
       padding: 8px;
-      border-radius: 4px;
+      border-radius: 12px;
       border: 1px solid #a5a5a5;
-      height: 350px;
+      height: 380px;
 
       .v-btn {
         width: 100%;
@@ -271,7 +272,7 @@ le lang="scss">
     list-style-type: none;
     margin-bottom: 50px;
     padding: 0 4px;
-    ma x-height: 280px;
+    max-height: 280px;
     overflow-y: auto;
   }
 }
