@@ -1,9 +1,6 @@
 <template>
-  <v-btn
-    class="default-button text-none"
-    :disabled="isDisabled"
-    :style="{ backgroundColor: colors[buttonColor], color: colors[textColor] }"
-  >
+  <v-btn class="default-button text-none" :disabled="isDisabled"
+    :style="{ backgroundColor: colors[buttonColor], color: colors[textColor] }">
     <div class="btn-body">
       <slot></slot>
     </div>
@@ -36,7 +33,7 @@ export default {
         gray: '#00000033',
         brown: '#00000080',
         cardColor: '#f1f2f4',
-        blue: '#0C66E4',
+        blue: '#3b5998',
         cardDetailColor: '#091e420f',
         danger: '#bb2124'
       }

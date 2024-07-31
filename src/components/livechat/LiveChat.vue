@@ -1,16 +1,48 @@
 <template>
-  <div v-if="showLiveChatForm">
+  <!-- Hiện form -->
+  <div v-if="showChat">
     <div class="live-chat-wrapper">
+      <!-- Header chung -->
       <div class="live-chat-header">
         <div class="live-chat-header-content">Chat trực tuyến</div>
-        <IconButton @click="toggleShowLiveChatForm" icon="mdi-close"></IconButton>
+        <div>
+          <IconButton v-if="showChatRoom" @click="leaveRoom" icon="mdi-logout"></IconButton>
+          <IconButton @click="toggleShowChat" icon="mdi-window-minimize"></IconButton>
+        </div>
       </div>
+      <!-- Body chung -->
       <div class="live-chat-body">
-        <div v-if="showLiveChatApp" class="live-chat-body-content">
+        <!-- Hiện form đăng nhập nếu chưa đăng nhập -->
+        <div v-if="!isAuth" class="live-chat-body-content">
+          <p style="font-weight: 500">Điền thông tin đăng nhập để bắt đầu đoạn chat</p>
+          <label>Nhập tên đăng nhập</label>
+          <input v-model="username" class="custom-input" />
+          <label>Nhập mật khẩu</label>
+          <input type="password" v-model="password" class="custom-input" />
+          <p class="text-subtitle-2" style="color: red; font-size: 13px !important">
+            {{ errorMessage }}
+          </p>
+          <DefaultButton @click="login" buttonColor="blue" textColor="white">Bắt đầu chat</DefaultButton>
+        </div>
+
+        <!-- Hiện form chọn phòng nếu đã đăng nhập -->
+        <div v-else-if="!showChatRoom & isAuth" class="live-chat-body-content">
+          <p style="font-weight: 500">Tạo hoặc vào phòng chat</p>
+          <label>Nhập tên phòng</label>
+          <input v-model="roomName" class="custom-input" />
+          <p class="text-subtitle-2" style="color: red; font-size: 13px !important">
+            {{ errorMessage }}
+          </p>
+          <DefaultButton @click="joinRoom" buttonColor="blue" textColor="white">Vào phòng</DefaultButton>
+          <DefaultButton @click="createRoom" buttonColor="brown" textColor="white">Tạo phòng</DefaultButton>
+        </div>
+
+        <!-- Vào phong chat -->
+        <div v-else-if="showChatRoom & isAuth" class="live-chat-body-content">
           <div>
             <ul id="messages">
-              <li style="font-weight: 500">Chào mừng bạn đến với chat trực tuyến, vui lòng đợi để được bộ phận CSKH hỗ
-                trợ.
+              <li style="font-weight: 500">
+                Chào mừng bạn đến với chat trực tuyến, vui lòng đợi để được bộ phận CSKH hỗ trợ.
               </li>
               <li v-for="message in messages" :key="message">{{ message }}</li>
             </ul>
@@ -20,99 +52,149 @@
             </form>
           </div>
         </div>
-        <div v-else class="live-chat-body-content">
-          <p style="font-weight: 500">Điền thông tin đăng nhập để bắt đầu đoạn chat</p>
-          <label>Nhập tên đăng nhập</label>
-          <input v-model="username" class="custom-input" />
-          <label>Nhập mật khẩu</label>
-          <input type="password" v-model="password" class="custom-input" />
-          <p v-if="loginFail" class="text-subtitle-2" style="color: red; font-size: 13px !important">Sai thông tin đăng
-            nhập hoặc mật khẩu,
-            vui lòng
-            thử lại</p>
-          <DefaultButton @click="login" buttonColor="brown" textColor="white">Bắt đầu chat</DefaultButton>
-        </div>
+
       </div>
     </div>
   </div>
+  <!-- Tắt form-->
   <div v-else class="live-chat-logo">
-    <DefaultButton buttonColor="brown" textColor="white" @click="toggleShowLiveChatForm"
-      prepend-icon="mdi-chat-processing-outline">Chat trực tuyến</DefaultButton>
+    <DefaultButton buttonColor="blue" textColor="white" @click="toggleShowChat"
+      prepend-icon="mdi-chat-processing-outline">
+      Chat trực tuyến
+    </DefaultButton>
   </div>
 </template>
 
 <script>
-import DefaultButton from '@/components/button/DefaultButton.vue'
-import IconButton from '@/components/button/IconButton.vue'
-import chatService from '@/services/chatService'
-import addTeacher from '@/services/UserService'
+import DefaultButton from '@/components/button/DefaultButton.vue';
+import IconButton from '@/components/button/IconButton.vue';
+import chatService from '@/services/ChatService';
+import loginAPI from '@/services/UserService';
 
 export default {
   name: 'LiveChat',
   data() {
     return {
-      showLiveChatForm: false,
-      showLiveChatApp: false,
+      showChat: false,
+      showChatRoom: false,
+      isAuth: false,
       username: '',
       password: '',
+      roomName: '',
       message: '',
       messages: [],
-      currentUser: '',
-      loginFail: false,
-    }
+      errorMessage: ''
+    };
   },
   components: {
     DefaultButton,
     IconButton
   },
   methods: {
-    toggleShowLiveChatForm() {
-      this.showLiveChatForm = !this.showLiveChatForm;
-      this.resetForm()
+    toggleShowChat() {
+      this.showChat = !this.showChat;
+      this.resetForm();
     },
     toggleShowLiveChatApp() {
-      this.showLiveChatApp = !this.showLiveChatApp;
-      if (this.showLiveChatApp) {
-        chatService.joinChat(this.currentUser);
+      this.showChatRoom = !this.showChatRoom;
+      if (this.showChatRoom) {
+        const user = this.currentUser
+        chatService.joinRoom(user);
         chatService.onMessageReceived((msg) => {
-          this.messages.push(msg);
+          let sender = msg.sender.user
+          let message = msg.content
+          this.messages.push(sender + ': ' + message);
         });
-      }
-    },
-    sendMessage() {
-      if (this.message.trim() !== '') {
-        chatService.sendMessage(`${this.currentUser}: ${this.message}`);
-        this.message = '';
       }
     },
     login() {
       const user = {
         UserName: this.username,
         Password: this.password,
-      }
-      addTeacher(user)
-        .then(res => {
+      };
+      loginAPI(user)
+        .then((res) => {
           this.currentUser = res.user.UserName;
-          this.toggleShowLiveChatApp();
+          this.isAuth = true;
+          chatService.registerUser(this.currentUser)
+          this.errorMessage = ''
         })
-        .catch(error => {
-          console.log('Login failed', error);
-          this.loginFail = true
-        })
+        .catch((error) => {
+          this.errorMessage = "Tên đăng nhập hoặc mật khẩu không chính xác"
+        });
     },
     resetForm() {
-      this.loginFail = false
-      this.username = ''
-      this.password = ''
+      this.username = '';
+      this.password = '';
+      this.roomName = '';
+      this.errorMessage = ''
+    },
+    // Tạo phòng
+    createRoom() {
+      chatService.createRoom(this.roomName);
+      chatService.onRoomCreated((room) => {
+        this.$emit('roomCreated', room)
+        this.joinRoom()
+      });
+    },
+    // Vào phòng
+    joinRoom() {
+      chatService.joinRoom(this.roomName);
+      chatService.onRoomJoined((user) => {
+        console.log("User joined:", user)
+        this.showChatRoom = true
+      });
+      chatService.listUsers(this.roomName, (users) => {
+        console.log('Room users:', users)
+      });
+    },
+    // Gửi tin nhắn
+    sendMessage() {
+      if (this.message.trim()) {
+        chatService.sendMessage({
+          roomName: this.roomName,
+          content: this.message
+        });
+        this.message = ''
+      }
+    },
+    //Thoát
+    leaveRoom() {
+      if (this.roomName) {
+        chatService.leaveRoom(this.roomName);
+        chatService.onUserLeft((user) => {
+          console.log(`User ${user} has left the room`);
+        });
+        chatService.removeRoom(this.roomName);
+        chatService.onRoomRemoved((room) => {
+          console.log(`Room ${room} has been removed`);
+        });
+        this.showChatRoom = false;
+        this.messages = [];
+      }
     }
   },
+  mounted() {
+    chatService.onMessageReceived((msg) => {
+      let sender = msg.sender.user
+      let message = msg.content
+      this.messages.push(sender + ': ' + message);
+    });
+    chatService.onError((err) => {
+      this.errorMessage = err
+      this.loginFail = true
+    });
+  },
   beforeDestroy() {
-    chatService.disconnect();
+    chatService.discon
+    nect()
   }
-}
+};
 </script>
 
-<style lang="scss">
+
+
+le lang="scss">
 .live-chat-wrapper {
   width: 368px;
   border-radius: 4px;
@@ -123,12 +205,17 @@ export default {
   .live-chat-header {
     display: flex;
     align-items: center;
-    padding-left: 16px;
+    padding: 0 8px 0 24px;
     height: 42px;
     justify-content: space-between;
-    background-color: rgb(127, 127, 127);
+    background-color: #3b5998;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+
+    i {
+      color: white !important;
+      font-size: 18px !important;
+    }
   }
 
   .live-chat-header-content {
@@ -184,7 +271,7 @@ export default {
     list-style-type: none;
     margin-bottom: 50px;
     padding: 0 4px;
-    max-height: 280px;
+    ma x-height: 280px;
     overflow-y: auto;
   }
 }

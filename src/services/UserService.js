@@ -1,7 +1,7 @@
 import axios from './base_axios'
 
 
-const addTeacher = (user) => {
+const loginAPI = (user) => {
   return axios
     .post('/api/auth/login', user)
     .then((response) => {
@@ -13,5 +13,5 @@ const addTeacher = (user) => {
     });
 }
 
-export default addTeacher
+export default loginAPI
 

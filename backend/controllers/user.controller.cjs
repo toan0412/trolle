@@ -3,7 +3,6 @@ const User = require('../models/user.model.cjs');
 
 const login = async (req, res) => {
   const { UserName, Password } = req.body;
-  console.log('Request Body:', req.body);
 
   if (!UserName || !Password) {
     return res.status(400).json({ message: 'Username and Password are required' });

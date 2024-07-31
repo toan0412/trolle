@@ -92,7 +92,7 @@
     </ol>
   </div>
   <div>
-    <CardDetail :cardDetail="selectedCard" :columnDetail="selectedColumn" ref="cardDetail"  />
+    <CardDetail :cardDetail="selectedCard" :columnDetail="selectedColumn" ref="cardDetail" />
     <ConfirmDialog ref="deleteCardDialog" message="Bạn có chắc chắn muốn xoá thẻ đang chọn không?"
       @response="handleResponseDeleteCardDialog" />
     <ConfirmDialog ref="fakeDataDialog" message="Bạn có chắc chắn muốn tạo dữ liệu ảo không?
@@ -117,14 +117,14 @@ import LiveChat from '@/components/livechat/LiveChat.vue'
 
 export default {
   name: 'HomePage',
-  
+
   components: {
     DefaultButton,
     IconButton,
     draggable,
     CardDetail,
     ConfirmDialog: defineAsyncComponent(() => import('@/components/dialog/ConfirmDialog.vue')),
-    Toast: defineAsyncComponent(() => import('@/components/toast/toast.vue')),
+    Toast: defineAsyncComponent(() => import('@/components/toast/Toast.vue')),
     LiveChat
   },
   data() {
