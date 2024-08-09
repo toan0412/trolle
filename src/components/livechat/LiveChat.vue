@@ -83,7 +83,8 @@ export default {
       roomName: '',
       message: '',
       messages: [],
-      errorMessage: ''
+      errorMessage: '',
+      currentUser: ''
     };
   },
   components: {
@@ -101,7 +102,7 @@ export default {
         const user = this.currentUser
         chatService.joinRoom(user);
         chatService.onMessageReceived((msg) => {
-          let sender = msg.sender.user
+          let sender = msg.sender
           let message = msg.content
           this.messages.push(sender + ': ' + message);
         });
@@ -133,17 +134,18 @@ export default {
     // Tạo phòng
     createRoom() {
       if (this.roomName.trim() == '') return
-      chatService.createRoom(this.roomName);
+      chatService.createRoom(this.roomName, this.currentUser);
       chatService.onRoomCreated((room) => {
         this.$emit('roomCreated', room)
         this.joinRoom()
+        this.messages.push(`${room} được tạo bởi ${this.currentUser}`)
       });
     },
     // Vào phòng
     joinRoom() {
-      chatService.joinRoom(this.roomName);
+      chatService.joinRoom(this.roomName, this.currentUser);
       chatService.onRoomJoined((user) => {
-        console.log("User joined:", user)
+        this.messages.push(`${user} đã tham gia phòng`)
         this.showChatRoom = true
       });
       chatService.listUsers(this.roomName, (users) => {
@@ -153,9 +155,10 @@ export default {
     // Gửi tin nhắn
     sendMessage() {
       if (this.message.trim()) {
+        let content = { 'sender': this.currentUser, "message": this.message }
         chatService.sendMessage({
           roomName: this.roomName,
-          content: this.message
+          content
         });
         this.message = ''
       }
@@ -163,9 +166,9 @@ export default {
     //Thoát
     leaveRoom() {
       if (this.roomName) {
-        chatService.leaveRoom(this.roomName);
+        chatService.leaveRoom(this.roomName, this.currentUser);
         chatService.onUserLeft((user) => {
-          console.log(`User ${user} has left the room`);
+          this.messages.push(`${user} đã thoát khỏi phòng`)
         });
         chatService.removeRoom(this.roomName);
         chatService.onRoomRemoved((room) => {
@@ -178,7 +181,7 @@ export default {
   },
   mounted() {
     chatService.onMessageReceived((msg) => {
-      let sender = msg.sender.user
+      let sender = msg.sender
       let message = msg.content
       this.messages.push(sender + ': ' + message);
     });

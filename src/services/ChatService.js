@@ -7,14 +7,14 @@ const chatService = {
   registerUser(user) {
     socket.emit('register user', user);
   },
-  createRoom(roomName) {
-    socket.emit('create room', roomName);
+  createRoom(roomName, user) {
+    socket.emit('create room', roomName, user);
   },
-  joinRoom(roomName) {
-    socket.emit('join room', roomName);
+  joinRoom(roomName, user) {
+    socket.emit('join room', roomName, user);
   },
-  leaveRoom(roomName) {
-    socket.emit('leave room', roomName);
+  leaveRoom(roomName, user) {
+    socket.emit('leave room', roomName, user);
   },
   removeRoom(roomName) {
     socket.emit('remove room', roomName);

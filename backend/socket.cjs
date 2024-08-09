@@ -1,7 +1,7 @@
 const socketIo = require('socket.io');
 
-let users = [];
-let rooms = [];
+var users = [];
+var rooms = [];
 
 function setupSocket(server) {
   const io = socketIo(server, {
@@ -13,35 +13,28 @@ function setupSocket(server) {
   });
 
   io.on('connection', (socket) => {
-    const socketID = socket.id
-    console.log('New client connected');
     socket.on('register user', (user) => {
-      const newUser = { user: user, socketID: socketID }
-      users.push(newUser)
-      console.log(`User ${newUser} registered`);
+      if (users.includes(user)) return
+      users.push(user)
+      console.log(`User ${user} registered`);
       console.log('List users:', users)
     });
 
-    socket.on('create room', (roomName) => {
+    socket.on('create room', (roomName, user) => {
+      //Nếu chưa có phòng thì tạo phòng
       if (!rooms[roomName]) {
-        //Lấy index của socket mới trong list users 
-        const userIndex = users.findIndex(user => user.socketID === socketID);
-        const user = users[userIndex].user
         rooms[roomName] = [];
         socket.join(roomName);
         rooms[roomName].push(user)
         io.emit('room created', roomName);
-        console.log(`Room ${roomName} created by ${users[userIndex]}`);
+        console.log(`Room ${roomName} created by ${user}`);
       } else {
         socket.emit('error', `Phòng ${roomName} đã tồn tại.`);
       }
     });
 
-    socket.on('join room', (roomName) => {
+    socket.on('join room', (roomName, user) => {
       if (rooms[roomName]) {
-        //Lấy index của socket mới trong list users 
-        const userIndex = users.findIndex(user => user.socketID === socketID);
-        const user = users[userIndex].user
         socket.join(roomName);
         //Kiểm tra xem trong room có user chưa
         if (!rooms[roomName].includes(user)) {
@@ -66,28 +59,23 @@ function setupSocket(server) {
 
     socket.on('chat message', (message) => {
       //Lấy index của socket mới trong list users 
-      const userIndex = users.findIndex(user => user.socketID === socketID);
       const { roomName, content } = message;
       if (roomName && rooms[roomName]) {
-        io.to(roomName).emit('chat message', { sender: users[userIndex], content });
+        io.to(roomName).emit('chat message', { sender: content.sender, content: content.message });
       } else {
         socket.emit('error', `Room ${roomName} does not exist or message content is missing`);
       }
     });
 
-    socket.on('leave room', (roomName) => {
-      //Lấy index của socket mới trong list users 
-      const userIndex = users.findIndex(user => user.socketID === socketID);
-      const user = users[userIndex];
+    socket.on('leave room', (roomName, user) => {
       socket.leave(roomName);
-      rooms[roomName].splice(userIndex, 1);
+      rooms[roomName].splice(user, 1);
       io.to(roomName).emit('user left', user);
       console.log(`${user} has left room ${roomName}`)
     });
 
 
     socket.on('remove room', (roomName) => {
-      console.log(rooms[roomName].length)
       // Nếu phòng trống thì xóa phòng
       if (rooms[roomName].length === 0) {
         delete rooms[roomName];
